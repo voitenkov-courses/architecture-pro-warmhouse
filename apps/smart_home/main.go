@@ -9,11 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"smarthome/db"
-	"smarthome/handlers"
-	"smarthome/services"
-
 	"github.com/gin-gonic/gin"
+
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/smart_home/db"
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/smart_home/handlers"
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/smart_home/services"
 )
 
 func main() {
