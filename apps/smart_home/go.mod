@@ -1,4 +1,4 @@
-module smarthome
+module github.com/voitenkov-courses/architecture-pro-warmhouse/apps/smart_home
 
 go 1.22
 
