@@ -1,0 +1,42 @@
+@startuml
+title DeviceMonitoring Service Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(User, "Пользователь", "")
+
+System_Ext(Device, "Устройство", "")
+
+System_Boundary(SmartHome, "Система SmartHome") {
+  Container(WebApp, "Веб приложение", "Java, Spring", "")
+  Container(MQQTBroker, "Брокер MQQT", "Mosquitto", "")
+  Container_Boundary(DeviceMonitoring, "Микросервис управления телеметрией") {
+    Container(DeviceMonitoringApp, "Приложение", "Go", "")
+    Container(DeviceMonitoringDB, "База данных", "Clickhouse", "")
+  }
+}
+
+Container(DeviceMonitoringApp, "Микросервис управления телеметрией", "Go") {
+  Component(TelemetryAccessController, "TelemetryAccessController", "HTTP Сервер")
+  Component(TelemetryProviderController, "TelemetryProviderController", "")
+  Component(TelemetryProviderService, "TelemetryProviderService","Сервис ")
+  Component(TelemetryAccessService, "TelemetryAccessService","Сервис доступа к телеметрии")
+  Component(StorageDal, "Storage DAL (Data Access Layer)", "Клиент ClickHouse")
+  Component(QueueDal, "Queue DAL (Data Access Layer)", "MQQT subscriber")
+}
+
+Rel(User, WebApp, "Использует систему")
+Rel(WebApp,TelemetryAccessController,"Вызывает Rest API [HTTPS]")
+
+Rel(Device, MQQTBroker, "Отправляет телеметрию [MQQT]")
+Rel(QueueDal,MQQTBroker, "Забирает телеметрию Async API [MQQT]")
+
+Rel(TelemetryAccessController,TelemetryAccessService,"Вызывает бизнес-логику (чтение и удаление телеметрии)")
+Rel(TelemetryProviderController,TelemetryProviderService,"Запускает и настраивает сервис")
+Rel(TelemetryAccessService,StorageDal,"Вызывает методы Storage DAL")
+Rel(QueueDal,TelemetryAccessService,"Вызывает бизнес-логику (сохранение телеметрии)")
+Rel(TelemetryProviderService,QueueDal,"Запускает клиента получения телеметрии")
+Rel(StorageDal,DeviceMonitoringDB,"Отправляет SQL-запросы")
+@enduml

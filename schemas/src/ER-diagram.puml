@@ -1,0 +1,47 @@
+@startuml
+title DeviceManagement ER Diagram
+
+top to bottom direction
+
+entity "Пользователь" as user {
+  * user_id : int4 (PK)
+  --
+  * user_surname : varchar
+  * user_name : varchar
+  user_patronymic: varchar
+  * user_phone_no: varchar
+  user_email : varchar
+}
+
+entity "Локация" as location {
+  * location_id : int4 (PK)
+  --
+  * user_id : int4 (FK)
+  * location_address : varchar
+  * location_room : varchar
+}
+
+entity "Устройство" as device {
+  * device_id : int4 (PK)
+  --
+  * location_id : int4 (FK)
+  * device_type_id : int4 (FK)  
+  * device_name : varchar
+  * device_serial_no : varchar
+  * device_status : varchar
+  * updated_at : time
+  * created_at : time
+}
+
+entity "Тип устройства" as device_type {
+  * device_type_id : int4 (PK)
+  --
+  * device_type_name : varchar
+  
+}
+
+user "1" -- "0..*" location 
+location "1" -- "0..*" device 
+device_type "1" -- "0..*" device
+
+@enduml

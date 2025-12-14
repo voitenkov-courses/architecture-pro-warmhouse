@@ -1,0 +1,1040 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: DeviceManagement API
+  description: API управления устройствами и пользователями (DeviceManagement service MVP)
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Технические методы
+      summary: Аутентификация пользователя
+      description: Позволяет пользователю войти в систему, используя логин и пароль.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: Имя пользователя
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Пароль пользователя
+                  example: qwerty
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: JWT
+                    description: Токен доступа
+                    example: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkhhcnJ5IFBvdHRlciIsImlhdCI6MTUxNjIzOTAyMn0.Jkr1iBrO9-cr7uZRYhvE8BuSXIfuPnQWuZBNBE60t14
+        '401':
+          description: Неверные учетные данные
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users:
+    post:
+      tags:
+      - Управление пользователями
+      summary:  Создание пользователя
+      description: Создает пользователя.
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users/{userId}:
+    get:
+      tags:
+      - Управление пользователями
+      summary: Получение информации о пользователе
+      description: Выводит информацию о пользователе.
+      operationId: getUserById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '404':
+          description: Пользователь не найден
+        '500':
+          description: Внутренняя ошибка сервера'
+    put:
+      tags:
+      - Управление пользователями
+      summary: Обновление информации о пользователе
+      description: Обновляет информацию о пользователе.
+      operationId: updateUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: UserId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: Пользователь успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+    delete:
+      tags:
+      - Управление пользователями
+      summary: Удаление пользователя
+      description: Удаляет пользователя.
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid  
+      responses:
+        '204':
+          description: Пользователь удален
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users/{userId}/locations:
+    post:
+      tags:
+      - Управление локациями
+      summary:  Создание локации
+      description: Создает локацию.
+      operationId: createLocation
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationRequest'
+        required: true
+      responses:
+        '201':
+          description: Локация успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера
+    get:
+      tags:
+      - Управление локациями
+      summary: Получение списка локаций пользователя
+      description: Выводит список локаций.
+      operationId: getLocations
+      security:
+        - bearerAuth: [] 
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Список локаций
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationsResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера'
+
+  /users/{userId}/locations/{locationId}:
+    get:
+      tags:
+      - Управление локациями
+      summary: Получение информации о локации
+      description: Выводит информацию о локации.
+      operationId: getLocationById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '404':
+          description: Пользователь не найден
+        '500':
+          description: Внутренняя ошибка сервера'
+    put:
+      tags:
+      - Управление локациями
+      summary: Обновление информации о локации
+      description: Обновляет информацию о локации.
+      operationId: updateLocation
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: UserId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationRequest'
+      responses:
+        '200':
+          description: Локация успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+    delete:
+      tags:
+      - Управление локациями
+      summary: Удаление локации
+      description: Удаляет локацию.
+      operationId: deleteLocation
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid  
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid     
+      responses:
+        '204':
+          description: Локация удалена
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users/{userId}/locations/{locationId}/devices:
+    post:
+      tags:
+      - Управление устройствами
+      summary:  Создание устройства
+      description: Добавляет новое устройство в систему.
+      operationId: createDevice
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceRequest'
+        required: true
+      responses:
+        '201':
+          description: Устройство успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера
+    get:
+      tags:
+      - Управление устройствами
+      summary: Получение списка устройств
+      description: Выводит список устройств.
+      operationId: getDevices
+      security:
+        - bearerAuth: [] 
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid      
+        - name: deviceType
+          in: query
+          description: Фильтр по типу устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Список устройств
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevicesResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера'
+
+  /users/{userId}/locations/{locationId}/devices/{deviceId}:
+    get:
+      tags:
+      - Управление устройствами
+      summary: Получение информации об устройстве
+      description: Выводит информацию об устройстве.
+      operationId: getDeviceById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          required: true
+          description: Уникальный идентификатор устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация об устройстве
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '404':
+          description: Устройство не найдено
+        '500':
+          description: Внутренняя ошибка сервера'
+    put:
+      tags:
+        - Управление устройствами
+      summary: Обновление информации об устройстве
+      description: Обновляет информацию об устройстве.
+      operationId: updateDevice
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          required: true
+          description: Уникальный идентификатор устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceRequest'
+      responses:
+        '200':
+          description: Устройство успешно обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+    patch:
+      tags:
+        - Управление устройствами
+      summary: Частичное обновление информации об устройстве
+      description: Частично обновляет информацию об устройстве.
+      operationId: patchDevice
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          required: true
+          description: Уникальный идентификатор устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceRequest'
+      responses:
+        '200':
+          description: Устройство успешно обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+    delete:
+      tags:
+        - Управление устройствами
+      summary: Удаление устройства
+      description: Удаляет устройство.
+      operationId: deleteDevice
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          required: true
+          description: Уникальный идентификатор устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid  
+      responses:
+        '204':
+          description: Устройство удаленo
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users/{userId}/devicetypes:
+    post:
+      tags:
+      - Управление типами устройств
+      summary:  Создание типа устройства
+      description: Добавляет новый тип устройства в систему.
+      operationId: createDeviceType
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceTypeRequest'
+        required: true
+      responses:
+        '201':
+          description: Тип устройства успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера
+    get:
+      tags:
+      - Управление типами устройств
+      summary: Получение списка типов устройств в локации
+      description: Выводит список типов устройств.
+      operationId: getDeviceTypes
+      security:
+        - bearerAuth: [] 
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: Уникальный идентификатор пользователя
+          schema:
+            type: string
+            format: uuid 
+      responses:
+        '200':
+          description: Список типов устройств
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypesResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '500':
+          description: Внутренняя ошибка сервера'
+
+  /users/{userId}/devicetypes/{deviceTypeId}:
+    get:
+      tags:
+      - Управление типами устройств
+      summary: Получение информации о типе устройства
+      description: Выводит информацию о типе устройства.
+      operationId: getDeviceTypeById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid 
+        - name: deviceTypeId
+          in: path
+          required: true
+          description: Уникальный идентификатор типа устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация о типе устройства
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '404':
+          description: Тип устройства не найден
+        '500':
+          description: Внутренняя ошибка сервера'
+    put:
+      tags:
+      - Управление типами устройств
+      summary: Обновление информации о типе устройства
+      description: Обновляет информацию о типе устройства.
+      operationId: updateDeviceType
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid 
+        - name: deviceTypeId
+          in: path
+          required: true
+          description: Уникальный идентификатор типа устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceTypeRequest'
+      responses:
+        '200':
+          description: Тип устройства успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeResponse'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+
+    delete:
+      tags:
+      - Управление типами устройств
+      summary: Удаление типа устройства
+      description: Удаляет тип устройства.
+      operationId: deleteDeviceType
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid 
+        - name: deviceTypeId
+          in: path
+          required: true
+          description: Уникальный идентификатор типа устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid  
+      responses:
+        '204':
+          description: Тип устройства удален
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRequest:
+      type: object
+      required:
+        - surnname
+        - name
+        - phoneNo
+      properties:
+        surname:
+          type: string
+          description: Фамилия пользователя
+          example: Иванов
+        name:
+          type: string
+          description: Имя пользователя
+          example: Иван
+        patronymic:
+          type: string
+          description: Отчество пользователя
+          example: Иванович
+        phoneNo:
+          type: string
+          description: Номер телефона пользователя
+          example: +70123456789
+        email:
+          type: string
+          description: E-mail пользователя
+          example: user@example.com
+
+    UserResponse:
+      type: object
+      required:
+        - surnname
+        - name
+        - phoneNo
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+        surname:
+          type: string
+          description: Фамилия пользователя
+          example: Иванов
+        name:
+          type: string
+          description: Имя пользователя
+          example: Иван
+        patronymic:
+          type: string
+          description: Отчество пользователя
+          example: Иванович
+        phoneNo:
+          type: string
+          description: Номер телефона пользователя
+          example: +70123456789
+        email:
+          type: string
+          description: E-mail пользователя
+          example: user@example.com
+
+    LocationRequest:
+      type: object
+      required:
+        - address
+      properties:
+        address:
+          type: string
+          description: Адрес локации пользователя
+          example: "г. Москва, Красная площадь, 1"
+
+    LocationResponse:
+      type: object
+      required:
+        - surnname
+        - name
+        - phoneNo
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+        locationId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+        address:
+          type: string
+          description: Адрес локации пользователя
+          example: "г. Москва, Красная площадь, 1"
+
+    LocationsResponse:
+      type: object
+      properties:
+        actions:
+          type: array
+          description: Список локаций
+          items:
+            $ref: '#/components/schemas/LocationResponse'
+
+    DeviceRequest:
+      type: object
+      required:
+        - name
+        - serialNo
+        - status
+      properties:
+        name:
+          type: string
+          description: Название устройства
+          example: "Buderus heater"
+        serialNo:
+          type: string
+          description: Серийный номер устройства
+          example: "ABCD0123456789"
+        status:
+          type: string
+          description: Статус устройства
+          example: "ON"
+
+    DeviceResponse:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+        userId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+        locationId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+        deviceTypeId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор типа устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: Название устройства
+          example: "Buderus Logomax U120"
+        serialNo:
+          type: string
+          description: Серийный номер устройства
+          example: "ABCD0123456789"
+        status:
+          type: string
+          description: Статус устройства
+          example: "ON"
+        createdAt:
+          type: string
+          description: Дата-время добавления в систему
+          example: "2024-04-13T08:30:00Z"
+        updatedAt:
+          type: string
+          description: Дата-время обновления данных
+          example: "2024-04-13T08:30:00Z"
+
+    DevicesResponse:
+      type: object
+      properties:
+        actions:
+          type: array
+          description: Список устройств
+          items:
+            $ref: '#/components/schemas/DeviceResponse'
+
+    DeviceTypeRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Название типа устройства
+          example: "heater"
+
+    DeviceTypeResponse:
+      type: object
+      properties:
+        deviceTypeId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор типа устройства
+          example: 123e4567-e89b-12d3-a456-426614174000
+        userId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: Название типа устройства
+          example: "heater"
+
+    DeviceTypesResponse:
+      type: object
+      properties:
+        actions:
+          type: array
+          description: Список типов устройств
+          items:
+            $ref: '#/components/schemas/DeviceTypeResponse'

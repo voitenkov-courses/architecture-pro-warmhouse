@@ -1,0 +1,52 @@
+@startuml
+title SmartHome Context Map Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+System(DeviceManagement, "Управление устройствами", "")
+System(DeviceList, "Управление списком устройств", "Пользователь добавляет или удаляет устройства ")
+System(DeviceManager, "Управление параметрами устройств", "Пользователь управляет устройствами")
+System(DeviceTypes, "Управление типами устройств", "Пользователь может добавлять новые типы устройств")
+System(ScriptManagement, "Управление сценариями работы устройств", "")
+System(ScriptEditor, "Программирование сценариев", "Пользователь создает сценарии работы устройств")
+System(ScriptRunner, "Запуск сценариев", "Сценарии запускаются по расписанию, по событию или вручную")
+
+System(DeviceMonitoring, "Мониторинг устройств", "")
+System(GetTelemetry, "Получение телеметрии с устройств", "Телеметрия поступает с устройств")
+System(ViewTelemetry, "Отображение телеметрии", "Пользователь просматривает телеметрию")
+
+System(UserManagement, "Управление пользователями", "")
+System(UserProfile, "Управление профилями пользователей", "Пользователь управляет своим профилем")
+System(UserAuthn, "Аутентификация пользователей", "Пользователь аутентифицируется в системе")
+System(UserLocations, "Управление локациями пользователя", "Пользователь управляет локациями")
+
+Rel(DeviceManagement, DeviceList, "Устройства добавляются в систему через")
+Rel(DeviceManagement, DeviceManager, "Устройства управляются через")
+Rel(DeviceManagement, DeviceTypes, "Типы устройств добавляются через")
+Rel(DeviceTypes, DeviceList, "Чтобы добавить устройство нового типа, надо добавить тип в справочник")
+
+Rel(DeviceMonitoring, GetTelemetry, "Получает телеметрию через")
+Rel(DeviceMonitoring, ViewTelemetry, "Отображает телеметрию через")
+
+Rel(DeviceList, GetTelemetry, "Телеметрия поступает от устройств, добавленных в список")
+Rel(GetTelemetry, ViewTelemetry, "Отображается собранная телеметрия")
+
+Rel(ScriptManagement, ScriptEditor, "Сценарии программируются через")
+Rel(ScriptManagement, ScriptRunner, "Сценарии запускаются через")
+Rel(ScriptEditor, DeviceList, "В сценариях используются устройства, длобавленные в список")
+Rel(ScriptRunner, DeviceManager, "Сценарии управляют устройствами")
+
+Rel(UserManagement, UserProfile, "Пользователь управляет своим профилем через")
+Rel(UserManagement, UserAuthn, "Пользователь аутентифицируется через")
+Rel(UserManagement, UserLocations, "Пользователь управляет своими локациями через")
+
+Rel(UserProfile, UserLocations, "Локация привязана к профилю пользователя")
+Rel(UserLocations, DeviceList, "Устройства привязаны к локации")
+Rel(UserAuthn, UserProfile, "Аутентифицированные пользователи могут управлять профилем")
+Rel(UserAuthn, DeviceManagement, "Аутентифицированные пользователи могут управлять устройствами")
+Rel(UserAuthn, ViewTelemetry, "Аутентифицированные пользователи могут просматривать телеметрию")
+
+
+@enduml

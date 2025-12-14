@@ -1,0 +1,37 @@
+@startuml
+title DeviceManagement Code Diagram
+
+top to bottom direction
+
+class "Пользователь" as user {
+  Фамилия
+  Имя
+  Отчество
+  Номер телефона
+  E-mail
+  Регистрация()
+  Логин()
+}
+
+class "Локация" as location {
+  Адрес
+  Помещение
+}
+
+class "Устройство" as device {
+  Название
+  Серийный номер
+  Статус
+  Обновлено
+  Создано
+}
+
+class "Тип устройства" as device_type {
+  Название
+}
+
+user "1" -- "0..*" location : имеет
+location "1" -- "0..*" device : размещены
+device_type "1" -- "0..*" device : имеет
+
+@enduml

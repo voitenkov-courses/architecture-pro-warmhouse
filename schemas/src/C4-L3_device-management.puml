@@ -1,0 +1,38 @@
+@startuml
+title DeviceManagement Service Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(User, "Пользователь", "")
+
+System_Ext(Device, "Устройство", "")
+
+System_Boundary(SmartHome, "Система SmartHome") {
+  Container(WebApp, "Веб приложение", "Java, Spring", "")
+  Container_Boundary(DeviceManagement, "Микросервис управления устройствами") {
+    Container(DeviceManagementApp, "Приложение", "Go", "")
+    Container(DeviceManagementDB, "База данных", "PostgreSQL", "")
+  }
+}
+
+Container(DeviceManagementApp, "Микросервис управления устройствами", "Go") {
+  Component(Controller, "Controller", "HTTP Сервер")
+  Component(DeviceTypeService, "DeviceTypeService","Сервис управления типами устройств")
+  Component(DeviceService, "DeviceService", "Сервис управления устройствами")
+  Component(Dal, "DAL (Data Access Layer)", "Уровень доступа к данным")
+}
+
+Rel(User, WebApp, "Использует систему")
+Rel(WebApp,Controller,"Вызывает Rest API [HTTPS]")
+Rel(DeviceService, Device, "Управляет устройствами")
+Rel(Device, DeviceService, "Регистрируется в системе")
+
+Rel(Controller,DeviceService,"Вызывает бизнес-логику")
+Rel(Controller,DeviceTypeService,"Вызывает бизнес-логику")
+Rel(DeviceService,Dal,"Вызывает методы DAL")
+Rel(DeviceTypeService,Dal,"Вызывает методы DAL")
+Rel(Dal,DeviceManagementDB,"Отправляет SQL-запросы")
+
+@enduml
