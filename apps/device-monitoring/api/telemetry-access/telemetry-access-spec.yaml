@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: TelemetryAccess API
+  description: API доступа к телеметрии (DeviceMonitoring service)
+paths:
+  /telemetry/{serialNo}:
+    get:
+      tags:
+      - Управление телеметрией 
+      summary: Получение телеметрии устройства
+      description: Выводит телеметрию с устройства.
+      operationId: getTelemetry
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: serialNo
+          in: path
+          required: true
+          description: Серийный номер устройства
+          example: "ABCD0123456789"
+          schema:
+            type: string
+        - name: timeStart
+          in: query
+          description: Время начала периода выборки метрик
+          example: "2024-04-13T08:30:00Z"
+          schema:
+            type: string
+        - name: timeEnd
+          in: query
+          description: Время окончания периода выборки метрик
+          example: "2024-04-13T09:30:00Z"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Телеметрия с устройства
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telemetry'
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Неверные учетные данные          
+        '404':
+          description: Устройство не найдено
+        '500':
+          description: Внутренняя ошибка сервера'
+
+    delete:
+      tags:
+        - Управление телеметрией
+      summary: Удаление телеметрии устройства
+      description: Удаляет телеметрию устройства.
+      operationId: deleteTelemetry
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: serialNo
+          in: path
+          required: true
+          description: Серийный номер устройства
+          example: "ABCD0123456789"
+          schema:
+            type: string
+        - name: timeStart
+          in: query
+          description: Время начала периода выборки метрик
+          example: "2024-04-13T08:30:00Z"
+          schema:
+            type: string
+        - name: timeEnd
+          in: query
+          description: Время окончания периода выборки метрик
+          example: "2024-04-13T09:30:00Z"
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Телеметрия удалена
+        '400':
+          description: Ошибка в запросе
+        '401':
+          description: Пользователь не авторизован
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Telemetry:
+      type: object
+      properties:
+        serialNo:
+          type: string
+          description: Серийный номер устройства
+          example: "ABCD0123456789"
+        time:
+          type: string
+          description: Время отправки метрики
+          example: "2024-04-13T08:30:00Z"
+        value:
+          type: integer
+          description: Значение метрики
+          example: 25
+        unit:
+          type: string
+          description: Единица измерения метрики
+          example: "°С"
+

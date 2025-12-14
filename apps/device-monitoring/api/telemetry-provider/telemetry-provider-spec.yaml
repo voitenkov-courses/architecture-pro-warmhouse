@@ -1,0 +1,40 @@
+asyncapi: 2.6.0
+info:
+  title: TelemetryProvider API
+  description: API провайдера телеметрии (DeviceMonitoring service)
+  version: '1.0.0'
+servers:
+  production:
+    url: mqqt-broker.smarthome.ru
+    protocol: mqtt
+channels:
+  device/metrics:
+    subscribe:
+      operationId: recieveMetric
+      summary: Забирает метрики из очереди.
+      message:
+        $ref: '#/components/messages/deviceMetric'
+        
+components:
+  messages:
+    deviceMetric:
+      payload:
+        type: object
+        properties:
+          serialNo:
+            type: string
+            description: Серийный номер устройства
+            example: "ABCD0123456789"            
+          time:
+            type: string
+            description: Время отправки метрики
+            example: "2024-04-13T08:30:00Z" 
+          value:
+            type: integer
+            description: Значение метрики
+            example: 25           
+          unit:
+            type: string
+            description: Единица измерения метрики
+            example: "°С"
+
