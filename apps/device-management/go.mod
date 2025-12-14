@@ -2,10 +2,9 @@ module github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-manag
 
 go 1.25.5
 
-require (
-	github.com/gin-gonic/gin v1.11.0
-	github.com/oapi-codegen/runtime v1.1.2
-)
+require github.com/gin-gonic/gin v1.11.0
+
+require github.com/oapi-codegen/runtime v1.1.2
 
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
@@ -31,6 +30,7 @@ require (
 	github.com/quic-go/quic-go v0.54.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.3.0 // indirect
+	github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/api v0.0.0-20251214122749-8b73288f7795
 	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/arch v0.20.0 // indirect
 	golang.org/x/crypto v0.40.0 // indirect

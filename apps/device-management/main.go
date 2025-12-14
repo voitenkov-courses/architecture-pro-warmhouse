@@ -12,32 +12,21 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/api"
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/internal/controllers/httpserver"
 )
 
 func main() {
 	// create a type that satisfies the `api.ServerInterface`, which contains an implementation of every operation from the generated code
-	server := api.NewServer()
+	server := httpserver.NewServer()
 
 	// Initialize router
 	router := gin.Default()
 
-	// Health check endpoint
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
-		})
-	})
-
-	// API routes
-	apiRoutes := router.Group("")
-
-	// Register sensor routes
-	temperatureHandler := handlers.NewTemperatureHandler()
-	temperatureHandler.RegisterRoutes(apiRoutes)
+	api.RegisterHandlers(router, server)
 
 	// Start server
 	srv := &http.Server{
-		Addr:    getEnv("PORT", ":8081"),
+		Addr:    getEnv("PORT", ":8080"),
 		Handler: router,
 	}
 
