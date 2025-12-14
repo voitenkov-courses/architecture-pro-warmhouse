@@ -28,6 +28,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.54.0 // indirect
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.3.0 // indirect
 	github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/api v0.0.0-20251214122749-8b73288f7795

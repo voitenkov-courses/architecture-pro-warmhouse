@@ -12,11 +12,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	api "github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/api"
-	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/internal/controllers/httpserver"
-	smarthomeintegration "github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/internal/controllers/smarthome-integration"
-	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/internal/dal/queue"
-	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-management/internal/dal/storage"
+	api "github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-monitoring/api/telemetry-access"
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-monitoring/internal/controllers/httpserver"
+	telemetryprovider "github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-monitoring/internal/controllers/telemetry-provider"
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-monitoring/internal/dal/queue"
+	"github.com/voitenkov-courses/architecture-pro-warmhouse/apps/device-monitoring/internal/dal/storage"
 )
 
 var wg *sync.WaitGroup
@@ -42,7 +42,7 @@ func main() {
 
 	queue := queue.New()
 
-	smarthomeintegration := smarthomeintegration.New(queue, storage)
+	telemetryprovider := telemetryprovider.New(queue, storage)
 
 	ctx, cancel := signal.NotifyContext(context.Background(),
 		syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
@@ -76,7 +76,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 
-		if err := smarthomeintegration.Start(ctx); err != nil {
+		if err := telemetryprovider.Start(ctx); err != nil {
 			log.Fatalf("Failed to start Telemetry Provider: %v\n", err)
 		}
 	}()
