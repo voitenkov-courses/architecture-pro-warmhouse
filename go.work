@@ -1,3 +1,6 @@
 go 1.25.5
 
-use ../../../../../go/pkg/mod/github.com/voitenkov-courses/architecture-pro-warmhouse/apps/smart_home@v0.0.0-20251213140311-f456cbb094f2
+use (
+	../../../../../go/pkg/mod/github.com/voitenkov-courses/architecture-pro-warmhouse/apps/smart_home@v0.0.0-20251213140311-f456cbb094f2
+	// ./apps/device-management/api
+)

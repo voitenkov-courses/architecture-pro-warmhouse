@@ -77,7 +77,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /users/{userId}:
+  /users/{userID}:
     get:
       tags:
       - Управление пользователями
@@ -87,7 +87,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -119,7 +119,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: UserId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -155,7 +155,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -173,7 +173,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /users/{userId}/locations:
+  /users/{userID}/locations:
     post:
       tags:
       - Управление локациями
@@ -182,6 +182,15 @@ paths:
       operationId: createLocation
       security:
         - bearerAuth: []
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          description: Уникальный идентификатор пользователя
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -210,7 +219,7 @@ paths:
       security:
         - bearerAuth: [] 
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -232,7 +241,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера'
 
-  /users/{userId}/locations/{locationId}:
+  /users/{userID}/locations/{locationID}:
     get:
       tags:
       - Управление локациями
@@ -242,7 +251,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -250,6 +259,14 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: locationID
+          in: path
+          required: true
+          description: Уникальный идентификатор локации
+          example: 123e4567-e89b-12d3-a456-426614174000
+          schema:
+            type: string
+            format: uuid 
       responses:
         '200':
           description: Информация о пользователе
@@ -274,7 +291,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: UserId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -282,7 +299,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -318,7 +335,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -326,7 +343,7 @@ paths:
           schema:
             type: string
             format: uuid  
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -344,7 +361,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /users/{userId}/locations/{locationId}/devices:
+  /users/{userID}/locations/{locationID}/devices:
     post:
       tags:
       - Управление устройствами
@@ -354,7 +371,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -362,7 +379,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -398,7 +415,7 @@ paths:
       security:
         - bearerAuth: [] 
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -406,7 +423,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -435,7 +452,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера'
 
-  /users/{userId}/locations/{locationId}/devices/{deviceId}:
+  /users/{userID}/locations/{locationID}/devices/{deviceID}:
     get:
       tags:
       - Управление устройствами
@@ -445,7 +462,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -453,7 +470,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -461,7 +478,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: deviceId
+        - name: deviceID
           in: path
           required: true
           description: Уникальный идентификатор устройства
@@ -493,7 +510,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -501,7 +518,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -509,7 +526,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: deviceId
+        - name: deviceID
           in: path
           required: true
           description: Уникальный идентификатор устройства
@@ -545,7 +562,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -553,7 +570,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -561,7 +578,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: deviceId
+        - name: deviceID
           in: path
           required: true
           description: Уникальный идентификатор устройства
@@ -597,7 +614,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -605,7 +622,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: locationId
+        - name: locationID
           in: path
           required: true
           description: Уникальный идентификатор локации
@@ -613,7 +630,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: deviceId
+        - name: deviceID
           in: path
           required: true
           description: Уникальный идентификатор устройства
@@ -631,7 +648,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
-  /users/{userId}/devicetypes:
+  /users/{userID}/devicetypes:
     post:
       tags:
       - Управление типами устройств
@@ -641,7 +658,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -677,7 +694,7 @@ paths:
       security:
         - bearerAuth: [] 
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           example: 123e4567-e89b-12d3-a456-426614174000
@@ -699,7 +716,7 @@ paths:
         '500':
           description: Внутренняя ошибка сервера'
 
-  /users/{userId}/devicetypes/{deviceTypeId}:
+  /users/{userID}/devicetypes/{deviceTypeID}:
     get:
       tags:
       - Управление типами устройств
@@ -709,7 +726,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -717,7 +734,7 @@ paths:
           schema:
             type: string
             format: uuid 
-        - name: deviceTypeId
+        - name: deviceTypeID
           in: path
           required: true
           description: Уникальный идентификатор типа устройства
@@ -749,7 +766,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -757,7 +774,7 @@ paths:
           schema:
             type: string
             format: uuid 
-        - name: deviceTypeId
+        - name: deviceTypeID
           in: path
           required: true
           description: Уникальный идентификатор типа устройства
@@ -794,7 +811,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: userId
+        - name: userID
           in: path
           required: true
           description: Уникальный идентификатор пользователя
@@ -802,7 +819,7 @@ paths:
           schema:
             type: string
             format: uuid 
-        - name: deviceTypeId
+        - name: deviceTypeID
           in: path
           required: true
           description: Уникальный идентификатор типа устройства
@@ -862,7 +879,7 @@ components:
         - name
         - phoneNo
       properties:
-        userId:
+        userID:
           type: string
           format: uuid
           description: Уникальный идентификатор пользователя
@@ -905,12 +922,12 @@ components:
         - name
         - phoneNo
       properties:
-        userId:
+        userID:
           type: string
           format: uuid
           description: Уникальный идентификатор пользователя
           example: 123e4567-e89b-12d3-a456-426614174000
-        locationId:
+        locationID:
           type: string
           format: uuid
           description: Уникальный идентификатор локации
@@ -952,22 +969,22 @@ components:
     DeviceResponse:
       type: object
       properties:
-        deviceId:
+        deviceID:
           type: string
           format: uuid
           description: Уникальный идентификатор устройства
           example: 123e4567-e89b-12d3-a456-426614174000
-        userId:
+        userID:
           type: string
           format: uuid
           description: Уникальный идентификатор пользователя
           example: 123e4567-e89b-12d3-a456-426614174000
-        locationId:
+        locationID:
           type: string
           format: uuid
           description: Уникальный идентификатор локации
           example: 123e4567-e89b-12d3-a456-426614174000
-        deviceTypeId:
+        deviceTypeID:
           type: string
           format: uuid
           description: Уникальный идентификатор типа устройства
@@ -1015,12 +1032,12 @@ components:
     DeviceTypeResponse:
       type: object
       properties:
-        deviceTypeId:
+        deviceTypeID:
           type: string
           format: uuid
           description: Уникальный идентификатор типа устройства
           example: 123e4567-e89b-12d3-a456-426614174000
-        userId:
+        userID:
           type: string
           format: uuid
           description: Уникальный идентификатор пользователя
