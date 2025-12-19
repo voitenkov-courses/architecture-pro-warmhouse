@@ -1,0 +1,41 @@
+@startuml
+title SmartHome Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(User, "Пользователь", "")
+
+System_Ext(Device, "Устройство", "")
+
+System_Boundary(SmartHome, "Система SmartHome") {
+  Container(WebApp, "Веб приложение", "Java, Spring", "")
+  Container(DeviceManagementApp, "Микросервис управления устройствами", "Go", "")
+  Container(DeviceManagementDB, "База данных микросервиса управления устройствами", "PostgreSQL", "")
+  Container(DeviceMonitoringApp, "Микросервис управления телеметрией", "Go", "")
+  Container(MQQTBroker, "Брокер MQQT", "Mosquitto", "")
+  Container(DeviceMonitoringDB, "База данных микросервиса управления телеметрией", "ClickHouse", "")
+  Container(ScriptManagementApp, "Микросервис управления сценариями", "Go", "")
+  Container(ScriptManagementDB, "База данных микросервиса управления сценариями", "MongoDB", "")
+  Container(UserManagementApp, "Микросервис управления пользователями", "Go", "")
+  Container(UserManagementDB, "База данных микросервиса управления пользователями", "PostgreSQL", "")
+}
+
+Rel(User, WebApp, "Использует систему")
+Rel(WebApp,DeviceManagementApp,"Rest API [HTTPS]")
+Rel(WebApp,DeviceMonitoringApp,"Rest API [HTTPS]")
+Rel(WebApp,ScriptManagementApp,"Rest API [HTTPS]")
+Rel(WebApp,UserManagementApp,"Rest API [HTTPS]")
+Rel(DeviceManagementApp, Device, "Управляет устройствами")
+Rel(Device, DeviceManagementApp, "Регистрируется в системе")
+Rel(Device, MQQTBroker, "Отправляет телеметрию [MQQT]")
+Rel(DeviceMonitoringApp,MQQTBroker, "Забирает телеметрию Async API [MQQT]")
+Rel(DeviceManagementApp, DeviceManagementDB,"Отправляет SQL-запросы")
+Rel(DeviceMonitoringApp, DeviceMonitoringDB,"Отправляет SQL-запросы")
+Rel(ScriptManagementApp, ScriptManagementDB,"Отправляет SQL-запросы")
+Rel(UserManagementApp, UserManagementDB,"Отправляет SQL-запросы")
+Rel(ScriptManagementApp, DeviceManagementApp,"Управляет устройствами Rest API [HTTPS]")
+Rel(ScriptManagementApp, DeviceMonitoringApp,"Запрашивает телеметрию Rest API [HTTPS]")
+
+@enduml

@@ -5,7 +5,7 @@ set -e
 
 echo "Starting the Smart Home Sensor API..."
 echo "Building and starting containers..."
-docker-compose -f docker-compose.yml up --build -d
+docker-compose -f docker-compose.mvp.yml up --build -d
 
 echo "Waiting for services to be ready..."
 # Wait for PostgreSQL to be ready
